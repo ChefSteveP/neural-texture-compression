@@ -4,502 +4,213 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Three.js Texture Viewer</title>
+  <link rel="stylesheet" href="css/styles.css">
   <style>
-    body { 
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
+    /* Additional styles for even spacing and collapsible menu */
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
     }
-    #canvas-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    
+    .input-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    #gui-container {
+    
+    .texture-preview {
+      flex: 0 0 50px;
+      height: 50px;
+    }
+    
+    .remove-texture-button {
+      flex: 0 0 30px;
+    }
+    
+    .toggle-menu {
       position: absolute;
       top: 10px;
       right: 10px;
       background-color: rgba(0, 0, 0, 0.7);
-      padding: 15px;
-      border-radius: 5px;
-      color: white;
-    }
-    .control-group {
-      margin-bottom: 15px;
-    }
-    .control-group h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-    }
-    .input-group {
-      margin-bottom: 8px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    input[type="file"] {
-      display: none;
-    }
-    .file-input-button {
-      background-color: #4e4e4e;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 14px;
-    }
-    .file-input-button:hover {
-      background-color: #666;
-    }
-    .mesh-controls {
-      margin-top: 15px;
-    }
-    select, input[type="range"] {
-      width: 100%;
-      margin-top: 5px;
-    }
-    .texture-preview {
-      width: 50px;
-      height: 50px;
-      display: inline-block;
-      background-color: #333;
-      border: 1px solid #555;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-    .preset-buttons {
-      margin-top: 15px;
-    }
-    button {
-      background-color: #4e4e4e;
       color: white;
       border: none;
-      padding: 8px 12px;
-      margin-right: 5px;
       border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    #gui-container {
+      transition: transform 0.3s ease;
+    }
+    
+    #gui-container.collapsed {
+      transform: translateX(calc(100% - 40px));
+    }
+    
+    .collapsible-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #666;
+    
+    .collapsible-header h3 {
+      margin: 0;
+    }
+    
+    .collapsible-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .collapsible-content.collapsed {
+      max-height: 0;
     }
   </style>
 </head>
 <body>
   <div id="canvas-container"></div>
   
+  <button id="toggle-menu" class="toggle-menu">☰</button>
+  
   <div id="gui-container">
     <div class="control-group">
-      <h3>Textures</h3>
-      
-      <div class="input-group">
-        <label for="albedo-input">Albedo (Diffuse):</label>
-        <label class="file-input-button">
-          Upload
-          <input type="file" id="albedo-input" accept="image/*">
-        </label>
-        <div class="texture-preview" id="albedo-preview"></div>
+      <div data-target="material-content">
+        <h3>Material Options</h3>
+      </div>
+      <div class="collapsible-header" data-target="textures-content">
+        <h3>Textures</h3>
+        <span class="collapse-icon">▼</span>
       </div>
       
-      <div class="input-group">
-        <label for="normal-input">Normal Map:</label>
-        <label class="file-input-button">
-          Upload
-          <input type="file" id="normal-input" accept="image/*">
-        </label>
-        <div class="texture-preview" id="normal-preview"></div>
-      </div>
-      
-      <div class="input-group">
-        <label for="roughness-input">Roughness Map:</label>
-        <label class="file-input-button">
-          Upload
-          <input type="file" id="roughness-input" accept="image/*">
-        </label>
-        <div class="texture-preview" id="roughness-preview"></div>
+      <div id="textures-content" class="collapsible-content">
+        <div class="input-group">
+          <div>
+            <label for="albedo-input">Albedo (Diffuse):</label>
+          </div>
+          <div class="input-controls">
+            <label class="file-input-button">
+              Upload
+              <input type="file" id="albedo-input" accept="image/*">
+            </label>
+            <div class="texture-preview" id="albedo-preview"></div>
+            <button class="remove-texture-button" id="remove-albedo" disabled>✕</button>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <div>
+            <label for="normal-input">Normal Map:</label>
+          </div>
+          <div class="input-controls">
+            <label class="file-input-button">
+              Upload
+              <input type="file" id="normal-input" accept="image/*">
+            </label>
+            <div class="texture-preview" id="normal-preview"></div>
+            <button class="remove-texture-button" id="remove-normal" disabled>✕</button>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <div>
+            <label for="roughness-input">Roughness Map:</label>
+          </div>
+          <div class="input-controls">
+            <label class="file-input-button">
+              Upload
+              <input type="file" id="roughness-input" accept="image/*">
+            </label>
+            <div class="texture-preview" id="roughness-preview"></div>
+            <button class="remove-texture-button" id="remove-roughness" disabled>✕</button>
+          </div>
+        </div>
       </div>
     </div>
     
     <div class="control-group mesh-controls">
-      <h3>Mesh Options</h3>
-      <label for="mesh-type">Mesh Type:</label>
-      <select id="mesh-type">
-        <option value="sphere">Sphere</option>
-        <option value="cube">Cube</option>
-        <option value="cylinder">Cylinder</option>
-        <option value="torus">Torus</option>
-        <option value="plane">Plane</option>
-      </select>
-      
-      <div class="input-group">
-        <label for="normal-strength">Normal Map Strength: <span id="normal-strength-value">1.0</span></label>
-        <input type="range" id="normal-strength" min="0" max="2" step="0.1" value="1.0">
+      <div class="collapsible-header" data-target="mesh-content">
+        <h3>Mesh Options</h3>
+        <span class="collapse-icon">▼</span>
       </div>
       
-      <div class="input-group">
-        <label for="roughness-factor">Roughness Factor: <span id="roughness-factor-value">1.0</span></label>
-        <input type="range" id="roughness-factor" min="0" max="1" step="0.05" value="1.0">
+      <div id="mesh-content" class="collapsible-content">
+        <label for="mesh-type">Mesh Type:</label>
+        <select id="mesh-type">
+          <option value="sphere">Sphere</option>
+          <option value="cube">Cube</option>
+          <option value="cylinder">Cylinder</option>
+          <option value="torus">Torus</option>
+          <option value="torusKnot">Torus Knot</option>
+          <option value="plane">Plane</option>
+        </select>
       </div>
     </div>
     
     <div class="preset-buttons">
-      <h3>Presets</h3>
-      <button id="preset-metal">Metal</button>
-      <button id="preset-wood">Wood</button>
-      <button id="preset-stone">Stone</button>
+      <div class="collapsible-header" data-target="presets-content">
+        <h3>Presets</h3>
+        <span class="collapse-icon">▼</span>
+      </div>
+      
+      <div id="presets-content" class="collapsible-content">
+        <button id="preset-metal">Metal</button>
+        <button id="preset-wood">Wood</button>
+        <!-- <button id="preset-stone">Stone</button>
+        <button id="preset-plastic">Plastic</button> -->
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="collapsible-header" data-target="info-content">
+        <h3>Controls</h3>
+        <span class="collapse-icon">▼</span>
+      </div>
+      
+      <div id="info-content" class="collapsible-content">
+        <p>• Drag mouse to rotate objects</p>
+        <p>• Press 'X' key to reset view</p>
+      </div>
     </div>
   </div>
 
+  <!-- Load Three.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+  
+  <!-- Load application scripts -->
+  <script src="js/materials.js"></script>
+  <script src="js/models.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/app.js"></script>
+  
+  <!-- Menu collapse script -->
   <script>
-    // Global variables
-    let scene, camera, renderer, controls;
-    let mesh, material;
-    let albedoMap, normalMap, roughnessMap;
-    let currentMeshType = 'sphere';
+    // Toggle entire menu
+    document.getElementById('toggle-menu').addEventListener('click', function() {
+      document.getElementById('gui-container').classList.toggle('collapsed');
+    });
     
-    // Light settings
-    const lights = {
-      ambient: null,
-      directional: null,
-      point1: null,
-      point2: null
-    };
-    
-    // Initialize Three.js scene
-    function init() {
-      // Create scene
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x222222);
-      
-      // Create camera
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 5;
-      
-      // Create renderer
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.shadowMap.enabled = true;
-      document.getElementById('canvas-container').appendChild(renderer.domElement);
-      
-      // Setup lights
-      setupLights();
-      
-      // Create default material
-      material = new THREE.MeshStandardMaterial({
-        color: 0xcccccc,
-        roughness: 0.5,
-        metalness: 0.0,
-      });
-      
-      // Create default mesh (sphere)
-      createMesh('sphere');
-      
-      // Set up orbit controls
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      
-      // Handle window resize
-      window.addEventListener('resize', onWindowResize);
-      
-      // Start animation loop
-      animate();
-      
-      // Setup event listeners
-      setupEventListeners();
-    }
-    
-    // Setup scene lighting
-    function setupLights() {
-      // Ambient light
-      lights.ambient = new THREE.AmbientLight(0xffffff, 0.3);
-      scene.add(lights.ambient);
-      
-      // Directional light (main light)
-      lights.directional = new THREE.DirectionalLight(0xffffff, 0.8);
-      lights.directional.position.set(1, 1, 1);
-      lights.directional.castShadow = true;
-      scene.add(lights.directional);
-      
-      // Point lights for better material visualization
-      lights.point1 = new THREE.PointLight(0xffffff, 0.5);
-      lights.point1.position.set(2, 2, 2);
-      scene.add(lights.point1);
-      
-      lights.point2 = new THREE.PointLight(0xffffff, 0.3);
-      lights.point2.position.set(-2, -1, -1);
-      scene.add(lights.point2);
-    }
-    
-    // Create mesh based on selected type
-    function createMesh(type) {
-      // Remove existing mesh
-      if (mesh) scene.remove(mesh);
-      
-      // Create geometry based on type
-      let geometry;
-      
-      switch (type) {
-        case 'sphere':
-          geometry = new THREE.SphereGeometry(2, 64, 64);
-          break;
-        case 'cube':
-          geometry = new THREE.BoxGeometry(3, 3, 3, 10, 10, 10);
-          break;
-        case 'cylinder':
-          geometry = new THREE.CylinderGeometry(1.5, 1.5, 4, 32);
-          break;
-        case 'torus':
-          geometry = new THREE.TorusGeometry(1.5, 0.6, 32, 100);
-          break;
-        case 'plane':
-          geometry = new THREE.PlaneGeometry(4, 4, 20, 20);
-          break;
-        default:
-          geometry = new THREE.SphereGeometry(2, 64, 64);
-      }
-      
-      // Create mesh with current material
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      scene.add(mesh);
-      
-      currentMeshType = type;
-    }
-    
-    // Handle file uploads and texture loading
-    function handleTextureUpload(inputElement, textureType) {
-      const file = inputElement.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-        const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load(e.target.result);
+    // Toggle individual sections
+    const headers = document.querySelectorAll('.collapsible-header');
+    headers.forEach(header => {
+      header.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        content.classList.toggle('collapsed');
         
-        // Update the preview
-        const previewId = inputElement.id.replace('-input', '-preview');
-        document.getElementById(previewId).style.backgroundImage = `url(${e.target.result})`;
-        document.getElementById(previewId).style.backgroundSize = 'cover';
-        
-        // Apply texture to material
-        switch (textureType) {
-          case 'albedo':
-            material.map = texture;
-            albedoMap = texture;
-            break;
-          case 'normal':
-            material.normalMap = texture;
-            material.normalScale.set(
-              parseFloat(document.getElementById('normal-strength').value),
-              parseFloat(document.getElementById('normal-strength').value)
-            );
-            normalMap = texture;
-            break;
-          case 'roughness':
-            material.roughnessMap = texture;
-            roughnessMap = texture;
-            break;
-        }
-        
-        material.needsUpdate = true;
-      };
-      
-      reader.readAsDataURL(file);
-    }
-    
-    // Set up event listeners for UI controls
-    function setupEventListeners() {
-      // Texture upload listeners
-      document.getElementById('albedo-input').addEventListener('change', function() {
-        handleTextureUpload(this, 'albedo');
-      });
-      
-      document.getElementById('normal-input').addEventListener('change', function() {
-        handleTextureUpload(this, 'normal');
-      });
-      
-      document.getElementById('roughness-input').addEventListener('change', function() {
-        handleTextureUpload(this, 'roughness');
-      });
-      
-      // Mesh type selection
-      document.getElementById('mesh-type').addEventListener('change', function() {
-        createMesh(this.value);
-      });
-      
-      // Normal strength slider
-      const normalStrengthSlider = document.getElementById('normal-strength');
-      normalStrengthSlider.addEventListener('input', function() {
-        const value = parseFloat(this.value);
-        document.getElementById('normal-strength-value').textContent = value.toFixed(1);
-        
-        if (material.normalMap) {
-          material.normalScale.set(value, value);
-          material.needsUpdate = true;
-        }
-      });
-      
-      // Roughness factor slider
-      const roughnessSlider = document.getElementById('roughness-factor');
-      roughnessSlider.addEventListener('input', function() {
-        const value = parseFloat(this.value);
-        document.getElementById('roughness-factor-value').textContent = value.toFixed(2);
-        
-        material.roughness = value;
-        material.needsUpdate = true;
-      });
-      
-      // Preset buttons
-      document.getElementById('preset-metal').addEventListener('click', function() {
-        setPreset('metal');
-      });
-      
-      document.getElementById('preset-wood').addEventListener('click', function() {
-        setPreset('wood');
-      });
-      
-      document.getElementById('preset-stone').addEventListener('click', function() {
-        setPreset('stone');
-      });
-    }
-    
-    // Apply material presets
-    function setPreset(presetName) {
-      switch (presetName) {
-        case 'metal':
-          material.color.set(0x888888);
-          material.roughness = 0.2;
-          material.metalness = 0.9;
-          document.getElementById('roughness-factor').value = 0.2;
-          document.getElementById('roughness-factor-value').textContent = '0.20';
-          break;
-        case 'wood':
-          material.color.set(0x8B4513);
-          material.roughness = 0.7;
-          material.metalness = 0.0;
-          document.getElementById('roughness-factor').value = 0.7;
-          document.getElementById('roughness-factor-value').textContent = '0.70';
-          break;
-        case 'stone':
-          material.color.set(0x7F7F7F);
-          material.roughness = 0.9;
-          material.metalness = 0.1;
-          document.getElementById('roughness-factor').value = 0.9;
-          document.getElementById('roughness-factor-value').textContent = '0.90';
-          break;
-      }
-      
-      material.needsUpdate = true;
-    }
-    
-    // Handle window resize
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-    
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    
-    // Add OrbitControls
-    class OrbitControls {
-      constructor(camera, domElement) {
-        this.camera = camera;
-        this.domElement = domElement;
-        this.target = new THREE.Vector3();
-        this.enableDamping = false;
-        this.dampingFactor = 0.05;
-        
-        // State
-        this.rotateStart = new THREE.Vector2();
-        this.rotateEnd = new THREE.Vector2();
-        this.rotateDelta = new THREE.Vector2();
-        this.isRotating = false;
-        
-        // Rotation and position variables
-        this.spherical = new THREE.Spherical().setFromVector3(camera.position);
-        
-        // Event listeners
-        this.domElement.addEventListener('mousedown', this.onMouseDown.bind(this));
-        this.domElement.addEventListener('mousemove', this.onMouseMove.bind(this));
-        this.domElement.addEventListener('mouseup', this.onMouseUp.bind(this));
-        this.domElement.addEventListener('wheel', this.onMouseWheel.bind(this));
-      }
-      
-      onMouseDown(event) {
-        this.isRotating = true;
-        this.rotateStart.set(event.clientX, event.clientY);
-      }
-      
-      onMouseMove(event) {
-        if (!this.isRotating) return;
-        
-        this.rotateEnd.set(event.clientX, event.clientY);
-        this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
-        
-        // Rotate left/right
-        this.spherical.theta -= 2 * Math.PI * this.rotateDelta.x / this.domElement.clientWidth;
-        
-        // Rotate up/down
-        this.spherical.phi -= 2 * Math.PI * this.rotateDelta.y / this.domElement.clientHeight;
-        
-        // Restrict phi to be between 0.1 and PI - 0.1
-        this.spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, this.spherical.phi));
-        
-        this.spherical.makeSafe();
-        
-        // Update camera position
-        this.camera.position.setFromSpherical(this.spherical);
-        this.camera.lookAt(this.target);
-        
-        this.rotateStart.copy(this.rotateEnd);
-      }
-      
-      onMouseUp() {
-        this.isRotating = false;
-      }
-      
-      onMouseWheel(event) {
-        // Zoom in/out
-        const zoomSpeed = 0.1;
-        if (event.deltaY > 0) {
-          this.spherical.radius *= (1 + zoomSpeed);
+        // Toggle icon
+        const icon = this.querySelector('.collapse-icon');
+        if (content.classList.contains('collapsed')) {
+          icon.textContent = '►';
         } else {
-          this.spherical.radius *= (1 - zoomSpeed);
+          icon.textContent = '▼';
         }
-        
-        // Restrict radius
-        this.spherical.radius = Math.max(1, Math.min(100, this.spherical.radius));
-        
-        // Update camera position
-        this.camera.position.setFromSpherical(this.spherical);
-        this.camera.lookAt(this.target);
-      }
-      
-      update() {
-        // This method would implement damping if enabled
-        if (this.enableDamping) {
-          // Damping logic would go here
-        }
-      }
-    }
-    
-    // Add OrbitControls to THREE
-    THREE.OrbitControls = OrbitControls;
-    
-    // Initialize when page loads
-    window.addEventListener('load', init);
+      });
+    });
   </script>
 </body>
 </html>
