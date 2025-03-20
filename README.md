@@ -74,7 +74,7 @@ If we observe the color map we notice that for all channels the average pixel va
 
 We have information as well regarding texture types, so let's analyze its frequency
 
-![Distribution of Texture Type](./texture_eda/distribution_texture_type.png){width="2069"}
+![Distribution of Texture Type](./texture_eda/distribution_texture_type.png)
 
 The highest frequency is observed on:
 
@@ -90,7 +90,7 @@ With this categories let's review whether clusters appear naturally with the ave
 
 They follow the same pattern as we previously observed on the global distribution. It seems that no distinguishable cluster appears on this dataset by pixel value
 
-\## Results
+## Results
 
 *Coming soon!*
 
