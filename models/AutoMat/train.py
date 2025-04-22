@@ -1,14 +1,14 @@
-from model import ConvAutoencoder
-
 import piq
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader, random_split, Dataset
 from datasets import load_dataset
+from model import ConvAutoencoder
 from PIL import Image
-from piq import psnr, ssim, multi_scale_ssim
+from piq import multi_scale_ssim, psnr, ssim
+from torch.utils.data import DataLoader, Dataset, random_split
+
 
 class TexturesDataset(Dataset):
     def __init__(self, split="train"):
@@ -52,20 +52,25 @@ class TexturesDataset(Dataset):
         color = self.transform(sample["color"])
         normal = self.transform(sample["normal"])
         return torch.cat((color, normal), dim=0)
-    
+
+
 def get_weighted_loss(weights):
     def loss_fn(x, y):
         mse_loss = nn.functional.mse_loss(x, y)
         l1_loss = nn.functional.l1_loss(x, y)
         ssim_loss = 1 - piq.ssim(x, y, data_range=1.0)
         ms_ssim_loss = 1 - piq.multi_scale_ssim(x, y, data_range=1.0)
-        return (weights[0] * mse_loss +
-                weights[1] * l1_loss +
-                weights[2] * ssim_loss +
-                weights[3] * ms_ssim_loss)
+        return (
+            weights[0] * mse_loss
+            + weights[1] * l1_loss
+            + weights[2] * ssim_loss
+            + weights[3] * ms_ssim_loss
+        )
+
     return loss_fn
 
-def train_autoencoder(num_epochs = 50): 
+
+def train_autoencoder(num_epochs=50):
     # load dataset
     dataset = TexturesDataset()
 
@@ -98,22 +103,20 @@ def train_autoencoder(num_epochs = 50):
     weights = (0.20, 0.75, 0.0, 0.05)
 
     # device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device(
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_available() else "cpu"
+    )
     print(f"Using device: {device}")
 
-    # model 
+    # model
     model = ConvAutoencoder().to(device)
     criterion = get_weighted_loss(weights)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    # loss 
-    loss_history = {
-        "total": [],
-        "mse": [],
-        "l1": [],
-        "ssim": [],
-        "ms_ssim": []
-    }
+    # loss
+    loss_history = {"total": [], "mse": [], "l1": [], "ssim": [], "ms_ssim": []}
 
     # training loop
     for epoch in range(num_epochs):
@@ -154,9 +157,20 @@ def train_autoencoder(num_epochs = 50):
         loss_history["ssim"].append(total_ssim / n)
         loss_history["ms_ssim"].append(total_ms_ssim / n)
 
-        print(f"Epoch [{epoch+1}/{num_epochs}], Total Loss: {total_loss / n:.4f}, "
+        print(
+            f"Epoch [{epoch+1}/{num_epochs}], Total Loss: {total_loss / n:.4f}, "
             f"MSE: {total_mse / n:.4f}, L1: {total_l1 / n:.4f}, "
-            f"SSIM: {total_ssim / n:.4f}, MS-SSIM: {total_ms_ssim / n:.4f}")
-        
+            f"SSIM: {total_ssim / n:.4f}, MS-SSIM: {total_ms_ssim / n:.4f}"
+        )
+
     # return model and test_loader for evaluation
     return model, test_loader
+
+
+if __name__ == "__main__":
+    # Train the model
+    model, test_loader = train_autoencoder(num_epochs=50)
+
+    # Save the model
+    torch.save(model.state_dict(), "conv_autoencoder_weights.pt")
+    print("Model saved as conv_autoencoder_weights.pt")
