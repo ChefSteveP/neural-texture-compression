@@ -13,7 +13,7 @@ Modern video games and real-time photorealistic graphics applications demand pho
 
 ## Problem Statement
 
-Traditional texture formats (e.g., JPEG, PNG) reduce storage size but are not optimized for GPU pipeline integration. As games scale up to 4K and beyond, storing and accessing uncompressed multi-channel textures becomes a bottleneck. This work explores **learned latent representations** for texture data that can be decoded efficiently either on load or at runtime.
+Traditional texture formats (e.g., JPEG, PNG) reduce storage size but are not optimized for GPU pipeline integration. As games scale up to 4K and beyond, storing and accessing uncompressed multi-channel textures becomes a bottleneck. This project explores **learned latent representations** for texture data that can be decoded efficiently either on load or at runtime.
 
 ![Memory comparison visualization placeholder](./figures/pipeline_new.jpg)
 
