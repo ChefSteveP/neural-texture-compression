@@ -1,7 +1,5 @@
 # AutoMat: Learning Compact Material Representations for Real-Time Graphics
 
-![Project banner placeholder image](./figures/Standin-splash.png)
-
 ## Overview
 
 Modern video games and real-time photorealistic graphics applications demand photorealistic rendering using high-resolution physically based rendering (PBR) materials. These materials—color, normal, roughness maps—occupy significant storage and VRAM. This project introduces a neural texture compression framework using convolutional autoencoders, achieving a **4× compression ratio** with minimal perceptual degradation, optimized for real-time performance.
@@ -41,7 +39,7 @@ This architecture significantly reduces the number of parameters compared to ful
 
 ![Pipeline diagram placeholder](./figures/Encoder_new.jpg)
 
-## 🛠Training Details
+## Training Details
 
 - **Dataset**: [HuggingFace: dream-textures/color-normal-1k](https://huggingface.co/datasets/dream-textures/textures-color-normal-1k)
 - **Image Resolution**: 512 × 512
