@@ -39,7 +39,7 @@ Our model is a symmetric **convolutional autoencoder**:
 
 This architecture significantly reduces the number of parameters compared to fully connected networks, while preserving essential visual structures.
 
-![Autoencoder Architecture](.figures/Encoder_new.jpg)
+![Autoencoder Architecture](figures/Encoder_new.jpg)
 
 ---
 
