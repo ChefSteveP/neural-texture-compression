@@ -4,7 +4,7 @@
 
 ## Overview
 
-Real-time photorealistic graphics applications, especially video games, face challenges in managing the storage of high resolution physically based (PBR) materials. These materials are represented as dense texture files. In this project we are aiming to reduce the memory storage requirement for these applications through neural texture compression and real time decoding.
+Modern video games and real-time photorealistic graphics applications demand photorealistic rendering using high-resolution physically based rendering (PBR) materials. These materials—color, normal, roughness maps—occupy significant storage and VRAM. This project introduces a neural texture compression framework using convolutional autoencoders, achieving a **4× compression ratio** with minimal perceptual degradation, optimized for real-time performance.
  
 ## Usage Instructions
 
@@ -13,7 +13,7 @@ Real-time photorealistic graphics applications, especially video games, face cha
 
 ## Problem Statement
 
-Real-time photorealistic graphics applications face significant challenges when managing high-resolution physically based rendering (PBR) materials. These materials are typically represented as dense texture files that consume substantial memory resources. AutoMat aims to reduce these storage requirements through neural texture compression techniques with real-time decoding capabilities.
+Traditional texture formats (e.g., JPEG, PNG) reduce storage size but are not optimized for GPU pipeline integration. As games scale up to 4K and beyond, storing and accessing uncompressed multi-channel textures becomes a bottleneck. This work explores **learned latent representations** for texture data that can be decoded efficiently either on load or at runtime.
 
 ![Memory comparison visualization placeholder](./figures/pipeline_new.jpg)
 
@@ -23,9 +23,7 @@ Building upon recent work in neural material compression by [Weinreich et al. 20
 
 The key innovation in our approach compared to other auto-encoder methods is that **our decoder is designed to be smaller than the encoder** to enable real-time inference. We carefully measure the trade-offs between compression ratio, reconstruction quality, and inference speed.
 
-![Pipeline diagram placeholder](./figures/Encoder_new.jpg)
-
-## Inference Modes
+### Inference Modes
 
 We evaluate two neural decoding modes:
 
@@ -35,6 +33,18 @@ We evaluate two neural decoding modes:
 | **Inference-on-Sample** | Low (latent only) | High (decode every frame) | Runtime shader-based neural decoding |
 
 > This implementation uses the **inference-on-load** strategy.
+
+### Architecture
+
+Our model is a symmetric **convolutional autoencoder**:
+
+- **Encoder**: 3 × Conv + ReLU + MaxPooling
+- **Bottleneck**: Fully connected latent layer (dim = 128)
+- **Decoder**: Transposed convolutions + upsampling
+
+This architecture significantly reduces the number of parameters compared to fully connected networks, while preserving essential visual structures.
+
+![Pipeline diagram placeholder](./figures/Encoder_new.jpg)
 
 ## General Pipeline
 
