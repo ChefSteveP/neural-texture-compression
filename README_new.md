@@ -79,7 +79,20 @@ Color and normal maps are reconstructed with high perceptual fidelity:
 
 > Achieved ~4× compression with PSNR > 30 and perceptually stable SSIM scores.
 
+## Usage
+
+To train and evaluate the model:
+
+```bash
+# Train the model
+python train.py
+
+# Evaluate trained model
+python eval.py
+
 ## Inspiration and References
+
+ Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE,86(11):2278–2324, 1998. doi: 10.1109/5.726791
 
 - [Weinreich et al.] Real-Time Neural Materials using Block-Compressed Features, Eurographics 2024, [arXiv:2311.16121](https://arxiv.org/2311.16121)
 - [van den Oord et al.] Neural Discrete Representation Learning (VQ-VAE), [arXiv:1711.00937](https://arxiv.org/abs/1711.00937)
