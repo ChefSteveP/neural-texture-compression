@@ -4,13 +4,13 @@
 
 ![Project Banner](./figures/results_preview.png)
 
-## 📌 Abstract
+## Abstract
 
 Modern video games and real-time applications demand photorealistic rendering using high-resolution physically based rendering (PBR) materials. These materials—color (albedo), normal, roughness maps—occupy significant storage and VRAM. This project introduces a neural texture compression framework using convolutional autoencoders, achieving a **4× compression ratio** with minimal perceptual degradation, optimized for real-time performance.
 
 ---
 
-## 🧠 Problem Statement
+## Problem Statement
 
 Traditional texture formats (e.g., JPEG, PNG) reduce storage size but are not optimized for GPU pipeline integration. As games scale up to 4K and beyond, storing and accessing uncompressed multi-channel textures becomes a bottleneck. This work explores **learned latent representations** for texture data that can be decoded efficiently either on load or at runtime.
 
