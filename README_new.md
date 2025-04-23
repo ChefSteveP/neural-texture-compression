@@ -4,8 +4,8 @@
 
 ## Overview
 
-AutoMat is a research project focused on developing compressed neural representations of physically-based materials for real-time graphics applications. Our goal is to significantly reduce memory storage requirements while maintaining high visual fidelity for applications like video games and real-time rendering.
-
+Real-time photorealistic graphics applications, especially video games, face challenges in managing the storage of high resolution physically based (PBR) materials. These materials are represented as dense texture files. In this project we are aiming to reduce the memory storage requirement for these applications through neural texture compression and real time decoding.
+ 
 ## Usage Instructions
 
 1. To train the model from scratch, run `python train.py` from the root directory of the project.
@@ -15,7 +15,7 @@ AutoMat is a research project focused on developing compressed neural representa
 
 Real-time photorealistic graphics applications face significant challenges when managing high-resolution physically based rendering (PBR) materials. These materials are typically represented as dense texture files that consume substantial memory resources. AutoMat aims to reduce these storage requirements through neural texture compression techniques with real-time decoding capabilities.
 
-![Memory comparison visualization placeholder](./figures/pipeline.png)
+![Memory comparison visualization placeholder](./figures/pipeline_new.png)
 
 ## Proposed Approach
 
@@ -23,7 +23,18 @@ Building upon recent work in neural material compression by [Weinreich et al. 20
 
 The key innovation in our approach compared to other auto-encoder methods is that **our decoder is designed to be smaller than the encoder** to enable real-time inference. We carefully measure the trade-offs between compression ratio, reconstruction quality, and inference speed.
 
-![Pipeline diagram placeholder](./figures/Encoder.png)
+![Pipeline diagram placeholder](./figures/Encoder_new.png)
+
+## Inference Modes
+
+We evaluate two neural decoding modes:
+
+| Mode               | VRAM Usage     | Compute Overhead   | Description |
+|--------------------|----------------|---------------------|-------------|
+| **Inference-on-Load** | High (decoded texture stored) | Low (decode once) | Decode once, use like normal texture |
+| **Inference-on-Sample** | Low (latent only) | High (decode every frame) | Runtime shader-based neural decoding |
+
+> This implementation uses the **inference-on-load** strategy.
 
 ## General Pipeline
 
