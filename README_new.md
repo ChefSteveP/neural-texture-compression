@@ -89,13 +89,15 @@ python train.py
 
 # Evaluate trained model
 python eval.py
+```
 
 ## Inspiration and References
 
- Y. Lecun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE,86(11):2278–2324, 1998. doi: 10.1109/5.726791
-
-- [Weinreich et al.] Real-Time Neural Materials using Block-Compressed Features, Eurographics 2024, [arXiv:2311.16121](https://arxiv.org/2311.16121)
-- [van den Oord et al.] Neural Discrete Representation Learning (VQ-VAE), [arXiv:1711.00937](https://arxiv.org/abs/1711.00937)
+- [LeCun et al.] *Gradient-Based Learning Applied to Document Recognition*, IEEE 1998. [doi.org/10.1109/5.726791](https://doi.org/10.1109/5.726791)
+- [Miano] *Compressed Image File Formats: JPEG, PNG, GIF, XBM, BMP*, Addison-Wesley, 1999. [doi/10.5555/556687](https://dl.acm.org/doi/10.5555/556687)
+- [Vaidyanathan et al.] *Random-Access Neural Compression of Material Textures*, SIGGRAPH 2023. [neural-materials](https://research.nvidia.com/labs/dir/neural-materials)
+- [van den Oord et al.] *Neural Discrete Representation Learning (VQ-VAE)*, [arXiv:1711.00937](https://arxiv.org/abs/1711.00937)
+- [Weinreich et al.] *Real-Time Neural Materials using Block-Compressed Features*, Eurographics 2024, [arXiv:2311.16121](https://arxiv.org/abs/2311.16121)
 
 ## Team
 
@@ -105,7 +107,7 @@ python eval.py
 - Stephen Pasch
 - Jun Wu
 
-## Exploratory Data Analysis
+## Appendix(Exploratory Data Analysis)
 
 We start the analysis with the images from Hugging Face
 
@@ -144,11 +146,6 @@ With this categories let's review whether clusters appear naturally with the ave
 
 They follow the same pattern as we previously observed on the global distribution. It seems that no distinguishable cluster appears on this dataset by pixel value
 
-## Results
-
-_Coming soon!_
-
-![Results placeholder](https://github.com/username/AutoMat/raw/main/docs/images/results_preview.png)
 
 ## License
 
