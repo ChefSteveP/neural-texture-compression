@@ -5,11 +5,6 @@
 ## Overview
 
 Modern video games and real-time photorealistic graphics applications demand photorealistic rendering using high-resolution physically based rendering (PBR) materials. These materials—color, normal, roughness maps—occupy significant storage and VRAM. This project introduces a neural texture compression framework using convolutional autoencoders, achieving a **4× compression ratio** with minimal perceptual degradation, optimized for real-time performance.
- 
-## Usage Instructions
-
-1. To train the model from scratch, run `python train.py` from the root directory of the project.
-2. To evaluate the trained model and view reconstruction results, run `python eval.py`.
 
 ## Problem Statement
 
@@ -79,7 +74,7 @@ Color and normal maps are reconstructed with high perceptual fidelity:
 
 > Achieved ~4× compression with PSNR > 30 and perceptually stable SSIM scores.
 
-## Usage
+## Usage Instructions
 
 To train and evaluate the model:
 
