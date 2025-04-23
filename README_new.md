@@ -46,23 +46,41 @@ This architecture significantly reduces the number of parameters compared to ful
 
 ![Pipeline diagram placeholder](./figures/Encoder_new.jpg)
 
-## General Pipeline
+## 🛠Training Details
 
-1.  **Data Collection**: Gather diverse PBR material textures from multiple datasets
-2.  **Preprocessing**: Normalize and prepare textures for training
-3.  **Training**: Develop and train auto-encoder architectures with compact decoders
-4.  **Evaluation**: Measure compression ratios, visual quality, and real-time performance
-5.  **Integration**: Implement real-time decoders in rendering frameworks
+- **Dataset**: [HuggingFace: dream-textures/color-normal-1k](https://huggingface.co/datasets/dream-textures/textures-color-normal-1k)
+- **Image Resolution**: 512 × 512
+- **Channels**: RGB + Normal maps
+- **Batch Size**: 16
+- **Learning Rate**: 0.001
+- **Latent Dimension**: 128
 
-## Datasets
+### Hybrid Loss Function
 
-We leverage multiple high-quality texture datasets:
+Weighted composite loss:
+- `0.75 × L1`
+- `0.20 × MSE`
+- `0.05 × MS-SSIM`
+- `0.00 × SSIM`
 
-- [**HF/texture-color-normal-1k**](https://huggingface.co/datasets/dream-textures/textures-color-normal-1k): Image dataset of 1000+ color and normal map textures in 512×512 resolution
-- [**AmbientCG**](https://ambientcg.com/list?type=substance&sort=popular): Free and open-source dataset containing hundreds of PBR material texture maps in various resolutions
-- [**Disney Research**](https://www.disneyanimation.com/resources/moana-island-scene/): Moana Island Scene with all assets necessary for rendering
+> This combination balances pixel accuracy and perceptual structure.
 
-![Sample materials placeholder](https://github.com/username/AutoMat/raw/main/docs/images/sample_materials.png)
+## Loss Curve
+
+Training loss across 50 epochs shows stable convergence:
+
+![Loss Curves](./figures/loss_by_epoch.jpg)
+
+## Results
+
+Color and normal maps are reconstructed with high perceptual fidelity:
+
+| Texture Type | Original | Reconstruction |
+|--------------|----------|----------------|
+| Color Map    | ![](./figures/Original Color.jpg) | ![](./figures/Reconstructed Color Map.jpg) |
+| Normal Map   | ![](./figures/Original Normal.jpg) | ![](./figures/Reconstructed Normal Map.jpg) |
+
+> Achieved ~4× compression with PSNR > 30 and perceptually stable SSIM scores.
 
 ## Inspiration and References
 
