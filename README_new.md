@@ -23,7 +23,7 @@ Building upon recent work in neural material compression by [Weinreich et al. 20
 
 The key innovation in our approach compared to other auto-encoder methods is that **our decoder is designed to be smaller than the encoder** to enable real-time inference. We carefully measure the trade-offs between compression ratio, reconstruction quality, and inference speed.
 
-![Pipeline diagram placeholder](./figures/figures/Encoder_new.jpg)
+![Pipeline diagram placeholder](.figures/Encoder_new.jpg)
 
 ## Inference Modes
 
