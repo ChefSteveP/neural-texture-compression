@@ -75,10 +75,7 @@ Training loss across 50 epochs shows stable convergence:
 
 Color and normal maps are reconstructed with high perceptual fidelity:
 
-| Texture Type | Original | Reconstruction |
-|--------------|----------|----------------|
-| Color Map    | ![](./figures/Original Color.jpg) | ![](./figures/Reconstructed Color Map.jpg) |
-| Normal Map   | ![](./figures/Original Normal.jpg) | ![](./figures/Reconstructed Normal Map.jpg) |
+![Result Map](./figures/result_map.jpg)
 
 > Achieved ~4× compression with PSNR > 30 and perceptually stable SSIM scores.
 
