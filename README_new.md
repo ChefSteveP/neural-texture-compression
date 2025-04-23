@@ -8,7 +8,7 @@ Real-time photorealistic graphics applications, especially video games, face cha
  
 ## Usage Instructions
 
-1. To train the model from scratch, run (models/AutoMat/train.py) from the root directory of the project.
+1. To train the model from scratch, run `python train.py` from the root directory of the project.
 2. To evaluate the trained model and view reconstruction results, run `python eval.py`.
 
 ## Problem Statement
